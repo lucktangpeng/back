@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Vcreate from '@/components/Vcreate'
+import Vlist from '@/components/Vlist'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
+      path: '/create',
+      name: 'Vcreate',
+      component: Vcreate
+    },
+    {
+      path: '/list',
+      name: 'Vlist',
+      component: Vlist
+    },
   ]
 })

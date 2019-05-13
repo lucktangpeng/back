@@ -49,11 +49,14 @@
             <!-- Sidebar Navidation Menus-->
             <!-- <span class="heading">Main</span> -->
             <ul class="list-unstyled">
-                                   <!-- <li><a href="index.html"> <i class="icon-home"></i>Home </a></li>
-                                    <li><a href="tables.html"> <i class="icon-grid"></i>Tables </a></li>
-                                   <li><a href="charts.html"> <i class="fa fa-bar-chart"></i>Charts </a></li> -->
-                <li class="active"><a href="forms.html"> <i class="icon-padnote"></i>课程创建 </a></li>
-                <li ><a href="forms.html"> <i class="icon-padnote"></i>课程明细 </a></li>
+                <li class="active">
+                    <router-link to="/create"><i class="icon-padnote"></i>课程创建</router-link>
+                    <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程创建 </a> -->
+                 </li>
+                <li >
+                    <router-link to="/list"><i class="icon-padnote"></i>课程明细</router-link>
+                    <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程明细 </a> -->
+                </li>
             </ul>
         </nav>
         <div class="content-inner">
@@ -77,76 +80,8 @@
                     <div class="row">
 
                         <!-- 这里是整个模块的不同点 -->
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-header d-flex align-items-center">
-                                    <h3 class="h4">课程创建</h3>
-                                </div>
-                                <div class="card-body">
-                                    <form class="form-horizontal">
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">课程ID</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" v-model="course_code" class="form-control" id="course_code">
-                                            </div>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">课程名称</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" v-model="course_name" class="form-control"
-                                                       id="course_name">
-                                            </div>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">课程时间</label>
-                                            <div class="col-sm-9">
-                                                <div class='input-group date' id='datetimepicker1'>
-                                                    <input type="text" v-model="time" class="form-control " id="time"  >
-                                                    <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                 
-
-
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">讲师</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" v-model="lecturer" class="form-control" id="lecturer">
-                                            </div>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">会议室号</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" v-model="meeting_room" class="form-control"
-                                                       id="meeting_room">
-                                            </div>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 form-control-label">会议室密码</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" v-model="meeting_room_pwd" class="form-control"
-                                                       id="meeting_room_pwd">
-                                            </div>
-                                        </div>
-                                        <div class="line"></div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-4 offset-sm-3">
-                                                <button type="button" class="btn btn-secondary " id="cancel">取消</button>
-                                                <button type="button" class="btn btn-primary " id="save" @click="click_save()">保存</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                
+                         <router-view/>
                     </div>
                 </div>
             </section>
@@ -160,12 +95,8 @@
 </template>
 
 <script>
-// import './assets/css/bootstrap.min.css'
-// import "./assets/css/bootstrap-datetimepicker.min.css"
-// import './assets/js/bootstrap.min'
-// import './assets/js/bootstrap-datetimepicker.min.js'
-// import $ from "jquery"
 import Vmodal from "../components/Vmodal.vue"
+import Vcreate from "../components/Vcreate.vue"
 export default {
   name: 'HelloWorld',
   data () {
