@@ -5,11 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        stat:"ni s zhu"
+        content_val:""
     },
     mutations: {
-      increment (state) {
-        state.count++
+      CONTENT (state,date) {
+        state.content_val = date.data
       }
     },
     actions:{
@@ -23,7 +23,7 @@ export default new Vuex.Store({
               }).then(function(date){
                 // 请求发送成功
                 console.log(date)
-                
+                context.commit("CONTENT",date)
               }).catch(function(){
                 // 请求发送失败
                 console.log("请求失败")
