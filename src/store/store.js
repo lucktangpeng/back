@@ -9,8 +9,10 @@ export default new Vuex.Store({
         title_status:{
           list:"",
           create:"",
+          client:""
         },
-        altercontent:""
+        altercontent:"",
+        clientcontent:""
     },
     mutations: {
       CONTENT (state,date) {
@@ -18,6 +20,9 @@ export default new Vuex.Store({
       },
       ALTER_CONTENT(state,date){
         state.altercontent = date.data
+      },
+      CLIENT_CONTENT(state,date){
+        state.clientcontent = date.data
       },
     },
     actions:{
@@ -53,5 +58,21 @@ export default new Vuex.Store({
               console.log("请求失败")
             })
       },
+        client_content(context){
+          Vue.prototype.$axios.request({
+            url:"http://127.0.0.1:8000/api/record/",
+            method:"GET",
+            headers:{
+              'Content-Type':'application/json',
+            }
+          }).then(function(date){
+            // 请求发送成功
+            console.log(date)
+            context.commit("CLIENT_CONTENT",date)
+          }).catch(function(){
+            // 请求发送失败
+            console.log("请求失败")
+          })
+        }
     }
   })

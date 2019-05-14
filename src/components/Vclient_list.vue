@@ -12,25 +12,23 @@
                         <table class="table" id="out_table">
                           <thead>
                             <tr>
-                              <th>#</th>
-                              <th>课程id</th>
-                              <th>课程名称</th>
-                              <th>课程时间</th>
-                              <th>讲师</th>
-                              <th>会议室号</th>
-                              <th>会议室密码</th>
+                              <!-- <th>#</th> -->
+                              <th>课程</th>
+                              <th>代理商代号</th>
+                              <th>培训人名称</th>
+                              <th>手机号</th>
+                              <th>区域</th>
                               <th>操作</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr v-for="item in all_content">
-                              <th scope="row">{{item.id}}</th>
-                              <td>{{item.course_code}}</td>
-                              <td>{{item.course_name}}</td>
-                              <td>{{item.time + " " + item.small_time}}</td>
-                              <td>{{item.lecturer}}</td>
-                              <td>{{item.meeting_room}}</td>
-                              <td>{{item.meeting_room_pwd}}</td>
+                              <th scope="row">{{item.course}}</th>
+                              <td>{{item.agent_id}}</td>
+                              <td>{{item.company}}</td>
+                              <td>{{item.phone}}</td>
+                              <td>{{item.area}}</td>
+                              <!-- <td>{{item.lecturer}}</td> -->
                               <td>
                                 <button type="button" class="btn btn-success" @click="ele_alter(item.id)">修改</button>
                                 <button type="button" class="btn btn-danger" @click="ele_remove(item.id)">删除</button>
@@ -54,30 +52,30 @@ export default {
         }
     },
     methods:{
-      ele_remove(id){
-        var that = this
-        this.$axios.request({
-                url:"http://127.0.0.1:8000/api/course/"+id,
-                method:"DELETE",
-                headers:{
-                  'Content-Type':'application/json',
-                }
-              }).then(function(date){
-                // 请求发送成功
-                console.log(date)
-                if(date.status == 204){
-                  that.$store.dispatch("content")
-                  $("#my_modal").modal("show")
-                }
-              }).catch(function(){
-                // 请求发送失败
-                console.log("请求失败")
-              })
-      },
-      ele_alter(id){
-        this.$store.dispatch("alter_conent",id)
-        this.$router.push({name:'Valter',params:{index:id}})
-      },
+      // ele_remove(id){
+      //   var that = this
+      //   this.$axios.request({
+      //           url:"http://127.0.0.1:8000/api/record/",
+      //           method:"GET",
+      //           headers:{
+      //             'Content-Type':'application/json',
+      //           }
+      //         }).then(function(date){
+      //           // 请求发送成功
+      //           console.log(date)
+      //           if(date.status == 200){
+      //             // that.$store.dispatch("content")
+      //             // $("#my_modal").modal("show")
+      //           }
+      //         }).catch(function(){
+      //           // 请求发送失败
+      //           console.log("请求失败")
+      //         })
+      // },
+      // ele_alter(id){
+      //   this.$store.dispatch("alter_conent",id)
+      //   this.$router.push({name:'Valter',params:{index:id}})
+      // },
       onexport(){
         var wb = XLSX.utils.table_to_book(document.getElementById("out_table"));
         var wbout = XLSX.write(wb,{bookType:"xlsx",type:"binary"});
@@ -119,8 +117,8 @@ export default {
                  return prev.concat(next);
             });
             console.log(sheetsData)
-            var title = ['id',"课程代号","课程名称","日期","时间","讲师","会议室号","会议室密码"]
-            for(var my_itme in [0,1,2,3,4,5,6,7]){
+            var title = ["序号","课程名称","代理商代号","培训人名称","手机号","区域"]
+            for(var my_itme in [0,1,2,3,4,5]){
               sheetsData[my_itme].value = title[my_itme]
             }
             
@@ -167,18 +165,18 @@ export default {
 
     
     mounted(){
-      this.$store.dispatch("content")
-      this.status.create = false
-      this.status.list = true
-      this.status.client = false
+      this.$store.dispatch("client_content")
+       this.status.create = false
+      this.status.list = false
+      this.status.client = true
       
     },
     computed:{
       all_content(){
-        return this.$store.state.content_val
+        return this.$store.state.clientcontent
       },
       out_content(){
-        let b = JSON.parse(JSON.stringify(this.$store.state.content_val))
+        let b = JSON.parse(JSON.stringify(this.$store.state.clientcontent))
         return b
       },
       status(){

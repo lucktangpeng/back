@@ -57,6 +57,10 @@
                     <router-link to="/list"><i class="icon-padnote"></i>课程明细</router-link>
                     <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程明细 </a> -->
                 </li>
+                <li :class="{active:status.client}" >
+                    <router-link to="/client"><i class="icon-padnote"></i>报名信息</router-link>
+                    <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程明细 </a> -->
+                </li>
             </ul>
         </nav>
         <div class="content-inner">

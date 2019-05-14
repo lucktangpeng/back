@@ -125,6 +125,27 @@ export default {
     var that = this
     this.status.create = true
     this.status.list = false
+    this.status.client = false
+    // this.course_code = this.content_val.lenght()
+    console.log("这里11")
+    console.log(this.con )
+    this.$axios.request({
+                url:"http://127.0.0.1:8000/api/course/",
+                method:"GET",
+                headers:{
+                  'Content-Type':'application/json',
+                }
+              }).then(function(date){
+                // 请求发送成功
+                var len = date.data.length
+                console.log(date.data[len-1].course_code)
+                that.course_code = parseInt(date.data[len-1].course_code)+1
+              }).catch(function(){
+                // 请求发送失败
+                console.log("请求失败")
+              })
+
+
     $("#datetimepicker1").datetimepicker({
         // format: "yyyy dd MM  - hh:ii",
         dateFormat: "yy-mm-dd",
@@ -155,7 +176,10 @@ export default {
     },
     status(){
         return this.$store.state.title_status
-      }
+      },
+    con(){
+        return this.$store.state.content_val.length
+    }
     
   },
   components:{
