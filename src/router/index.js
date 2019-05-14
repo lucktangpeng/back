@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Vcreate from '@/components/Vcreate'
 import Vlist from '@/components/Vlist'
+import Valter from '@/components/Valter'
 
 Vue.use(Router)
 
@@ -16,6 +17,11 @@ export default new Router({
       path: '/list',
       name: 'Vlist',
       component: Vlist
+    },
+    {
+      path: '/alter',
+      name: 'Valter',
+      component: Valter
     },
   ]
 })

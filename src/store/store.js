@@ -5,12 +5,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        content_val:""
+        content_val:"",
+        title_status:{
+          list:"",
+          create:"",
+        },
+        altercontent:""
     },
     mutations: {
       CONTENT (state,date) {
         state.content_val = date.data
-      }
+      },
+      ALTER_CONTENT(state,date){
+        state.altercontent = date.data
+      },
     },
     actions:{
         content(context){
@@ -28,6 +36,22 @@ export default new Vuex.Store({
                 // 请求发送失败
                 console.log("请求失败")
               })
-        }
+        },
+        alter_conent(context,id){
+          Vue.prototype.$axios.request({
+              url:"http://127.0.0.1:8000/api/course/"+id,
+              method:"GET",
+              headers:{
+                'Content-Type':'application/json',
+              }
+            }).then(function(date){
+              // 请求发送成功
+              console.log(date)
+              context.commit("ALTER_CONTENT",date)
+            }).catch(function(){
+              // 请求发送失败
+              console.log("请求失败")
+            })
+      },
     }
   })

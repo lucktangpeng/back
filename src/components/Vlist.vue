@@ -33,7 +33,7 @@
                               <td>{{item.meeting_room}}</td>
                               <td>{{item.meeting_room_pwd}}</td>
                               <td>
-                                <button type="button" class="btn btn-success">修改</button>
+                                <button type="button" class="btn btn-success" @click="ele_alter(item.id)">修改</button>
                                 <button type="button" class="btn btn-danger" @click="ele_remove(item.id)">删除</button>
                               </td>
                             </tr>
@@ -65,20 +65,32 @@ export default {
               }).then(function(date){
                 // 请求发送成功
                 console.log(date)
-                // this.reload()
-                that.$store.dispatch("content")
+                if(date.status == 204){
+                  that.$store.dispatch("content")
+                  $("#my_modal").modal("show")
+                }
               }).catch(function(){
                 // 请求发送失败
                 console.log("请求失败")
               })
-      }
+      },
+      ele_alter(id){
+        this.$store.dispatch("alter_conent",id)
+        this.$router.push({name:'Valter',params:{index:id}})
+      },
     },
     mounted(){
       this.$store.dispatch("content")
+      this.status.create = false
+      this.status.list = true
+      
     },
     computed:{
       all_content(){
         return this.$store.state.content_val
+      },
+      status(){
+        return this.$store.state.title_status
       }
     }
 }

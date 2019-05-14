@@ -49,11 +49,11 @@
             <!-- Sidebar Navidation Menus-->
             <!-- <span class="heading">Main</span> -->
             <ul class="list-unstyled">
-                <li class="active">
+                <li :class="{active:status.create}">
                     <router-link to="/create"><i class="icon-padnote"></i>课程创建</router-link>
                     <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程创建 </a> -->
                  </li>
-                <li >
+                <li :class="{active:status.list}" >
                     <router-link to="/list"><i class="icon-padnote"></i>课程明细</router-link>
                     <!-- <a href="forms.html"> <i class="icon-padnote"></i>课程明细 </a> -->
                 </li>
@@ -163,6 +163,9 @@ export default {
     },
     detail_time(){
         return this.time.split(" ")
+    },
+    status(){
+        return this.$store.state.title_status
     }
   },
   components:{

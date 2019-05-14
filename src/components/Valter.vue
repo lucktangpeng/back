@@ -5,14 +5,14 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header d-flex align-items-center">
-                    <h3 class="h4">课程创建</h3>
+                    <h3 class="h4">课程修改</h3>
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal">
                         <div class="form-group row">
                             <label class="col-sm-2 form-control-label">课程ID</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="course_code" class="form-control" id="course_code">
+                                <input type="text" v-model="course_code" class="form-control" id="course_code" >
                             </div>
                         </div>
                         <div class="line"></div>
@@ -82,7 +82,7 @@
 // import $ from "jquery"
 import Vmodal from "../components/Vmodal.vue"
 export default {
-  name: 'HelloWorld',
+  name: 'Valter',
   data () {
     return {
       course_code:"",
@@ -95,13 +95,14 @@ export default {
   },
   methods:{
     click_save(){
-      var that = this
       console.log(this.create_values)
-      console.log(this.detail_time)
-      console.log($('#time').val())
+      console.log(this.time)
+    //   console.log(this.detail_time)
+    //   console.log($('#time').val())
+      var tham = this
       this.$axios.request({
-          url:"http://127.0.0.1:8000/api/course/",
-          method:"post",
+          url:"http://127.0.0.1:8000/api/course/" + tham.$route.params.index,
+          method:"PUT",
           data:this.create_values,
           headers:{
             'Content-Type':'application/json',
@@ -109,10 +110,8 @@ export default {
         }).then(function(date){
           // 请求发送成功
           console.log(date)
-          if (date.status == 201){
-            console.log("")
-            $("#my_modal").modal("show")
-            that.$router.push({name:"Vlist"})
+          if (date.status == 200){
+              tham.$router.push({name:"Vlist"})
           }
         }).catch(function(){
           // 请求发送失败
@@ -123,8 +122,36 @@ export default {
   mounted(){
     // this.test()
     var that = this
-    this.status.create = true
+    this.status.create = false
     this.status.list = false
+    // console.log("url的位置")
+    // console.log(this.$route.params.index)
+    // console.log(this.$store.state.altercontent)
+    this.$axios.request({
+              url:"http://127.0.0.1:8000/api/course/"+that.$route.params.index,
+              method:"GET",
+              headers:{
+                'Content-Type':'application/json',
+              }
+            }).then(function(date){
+              // 请求发送成功
+              console.log(date)
+              that.course_code=date.data.course_code
+              that.course_name=date.data.course_name
+              that.time=date.data.time+" "+date.data.small_time
+              that.lecturer=date.data.lecturer
+              that.meeting_room=date.data.meeting_room
+              that.meeting_room_pwd=date.data.meeting_room_pwd
+                // course_name:"",
+                // time:"",
+                // lecturer:"",
+                // meeting_room:"",
+                // meeting_room_pwd:"",
+            }).catch(function(){
+              // 请求发送失败
+              console.log("请求失败")
+            })
+
     $("#datetimepicker1").datetimepicker({
         // format: "yyyy dd MM  - hh:ii",
         dateFormat: "yy-mm-dd",
@@ -135,7 +162,8 @@ export default {
     }).on("change",function(ev){
         var startTime = $("#time").val();
         that.time = startTime
-    })
+    });
+    
     
   },
   computed:{
@@ -152,6 +180,9 @@ export default {
     },
     detail_time(){
         return this.time.split(" ")
+    },
+    alter_val(){
+        return this.$store.state.altercontent
     },
     status(){
         return this.$store.state.title_status
