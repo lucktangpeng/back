@@ -101,7 +101,7 @@ export default {
     //   console.log($('#time').val())
       var tham = this
       this.$axios.request({
-          url:"http://127.0.0.1:8000/api/course/" + tham.$route.params.index,
+          url:"http://192.168.10.151:8000/api/course/" + tham.$route.params.index,
           method:"PUT",
           data:this.create_values,
           headers:{
@@ -128,7 +128,7 @@ export default {
     // console.log(this.$route.params.index)
     // console.log(this.$store.state.altercontent)
     this.$axios.request({
-              url:"http://127.0.0.1:8000/api/course/"+that.$route.params.index,
+              url:"http://192.168.10.151:8000/api/course/"+that.$route.params.index,
               method:"GET",
               headers:{
                 'Content-Type':'application/json',

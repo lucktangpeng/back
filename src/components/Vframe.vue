@@ -119,7 +119,7 @@ export default {
       console.log(this.detail_time)
       console.log($('#time').val())
       this.$axios.request({
-          url:"http://127.0.0.1:8000/api/course/",
+          url:"http://192.168.10.151:8000/api/course/",
           method:"post",
           data:this.create_values,
           headers:{

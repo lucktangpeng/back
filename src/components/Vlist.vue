@@ -57,7 +57,7 @@ export default {
       ele_remove(id){
         var that = this
         this.$axios.request({
-                url:"http://127.0.0.1:8000/api/course/"+id,
+                url:"http://192.168.10.151:8000/api/course/"+id,
                 method:"DELETE",
                 headers:{
                   'Content-Type':'application/json',

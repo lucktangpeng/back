@@ -28,7 +28,7 @@ export default new Vuex.Store({
     actions:{
         content(context){
             Vue.prototype.$axios.request({
-                url:"http://127.0.0.1:8000/api/course/",
+                url:"http://192.168.10.151:8000/api/course/",
                 method:"GET",
                 headers:{
                   'Content-Type':'application/json',
@@ -44,7 +44,7 @@ export default new Vuex.Store({
         },
         alter_conent(context,id){
           Vue.prototype.$axios.request({
-              url:"http://127.0.0.1:8000/api/course/"+id,
+              url:"http://192.168.10.151:8000/api/course/"+id,
               method:"GET",
               headers:{
                 'Content-Type':'application/json',
@@ -60,7 +60,7 @@ export default new Vuex.Store({
       },
         client_content(context){
           Vue.prototype.$axios.request({
-            url:"http://127.0.0.1:8000/api/record/",
+            url:"http://192.168.10.151:8000/api/record/",
             method:"GET",
             headers:{
               'Content-Type':'application/json',
