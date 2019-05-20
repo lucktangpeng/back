@@ -115,11 +115,9 @@ export default {
   },
   methods:{
     click_save(){
-      console.log(this.create_values)
-      console.log(this.detail_time)
-      console.log($('#time').val())
+
       this.$axios.request({
-          url:"http://192.168.10.151:8000/api/course/",
+          url:this.com.course_url,
           method:"post",
           data:this.create_values,
           headers:{
@@ -127,7 +125,6 @@ export default {
           }
         }).then(function(date){
           // 请求发送成功
-          console.log(date)
           if (date.status == 201){
             console.log("")
             $("#my_modal").modal("show")
@@ -139,7 +136,6 @@ export default {
     },
   },
   mounted(){
-    // this.test()
     var that = this
      $("#datetimepicker1").datetimepicker({
         // format: "yyyy dd MM  - hh:ii",
@@ -176,9 +172,7 @@ export default {
       Vmodal,
   }
 }
-// $('#datetimepicker1').datetimepicker({
-//      format : 'dddd YYYY年MM月DD日 HH:mm:ss'
-// });
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

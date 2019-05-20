@@ -9,26 +9,42 @@
                 </div>
                 <div class="card-body">
                     <form class="form-horizontal">
-                        <div class="form-group row">
+                        <div class="form-group row has-danger">
                             <label class="col-sm-2 form-control-label">课程ID</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="course_code" class="form-control" id="course_code">
+                                <input type="text" v-model="put_title.course_code" class="form-control "  :class="{'is-invalid':course_code}" @change="change_course_code()" id="course_code">
+                                <div class="invalid-feedback"  >{{course_code_error}}</div>
                             </div>
+                            
                         </div>
                         <div class="line"></div>
                         <div class="form-group row">
                             <label class="col-sm-2 form-control-label">课程名称</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="course_name" class="form-control"
+                                <input type="text" v-model="put_title.course_name" class="form-control"
                                         id="course_name">
                             </div>
                         </div>
                         <div class="line"></div>
                         <div class="form-group row">
-                            <label class="col-sm-2 form-control-label">课程时间</label>
+                            <label class="col-sm-2 form-control-label">开始时间</label>
                             <div class="col-sm-9">
                                 <div class='input-group date' id='datetimepicker1'>
-                                    <input type="text" v-model="time" class="form-control " id="time"  >
+                                    <input type="text" v-model="put_title.start_time" class="form-control" :class="{'is-invalid':start_time}" @click="change_start_time()" id="start_time"  >
+                                    <div class="invalid-feedback" > {{start_time_error}}</div>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 form-control-label">结束时间</label>
+                            <div class="col-sm-9">
+                                <div class='input-group date' id='datetimepicker2'>
+                                    <input type="text" v-model="put_title.end_time" class="form-control " :class="{'is-invalid':end_time}" @click="change_end_time()" id="end_time"  >
+                                    <div class="invalid-feedback" >{{end_time_error}}</div>
                                     <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -42,14 +58,14 @@
                         <div class="form-group row">
                             <label class="col-sm-2 form-control-label">讲师</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="lecturer" class="form-control" id="lecturer">
+                                <input type="text" v-model="put_title.lecturer" class="form-control" id="lecturer">
                             </div>
                         </div>
                         <div class="line"></div>
                         <div class="form-group row">
                             <label class="col-sm-2 form-control-label">会议室号</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="meeting_room" class="form-control"
+                                <input type="text" v-model="put_title.meeting_room" class="form-control"
                                         id="meeting_room">
                             </div>
                         </div>
@@ -57,7 +73,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 form-control-label">会议室密码</label>
                             <div class="col-sm-9">
-                                <input type="text" v-model="meeting_room_pwd" class="form-control"
+                                <input type="text" v-model="put_title.meeting_room_pwd" class="form-control"
                                         id="meeting_room_pwd">
                             </div>
                         </div>
@@ -75,42 +91,67 @@
 </template>
 
 <script>
-// import './assets/css/bootstrap.min.css'
-// import "./assets/css/bootstrap-datetimepicker.min.css"
-// import './assets/js/bootstrap.min'
-// import './assets/js/bootstrap-datetimepicker.min.js'
-// import $ from "jquery"
+
 import Vmodal from "../components/Vmodal.vue"
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      course_code:"",
-      course_name:"",
-      time:"",
-      lecturer:"",
-      meeting_room:"",
-      meeting_room_pwd:"",
+      put_title:{
+            course_code:"",
+            course_name:"",
+            start_time:"",
+            end_time:"",
+            lecturer:"",
+            meeting_room:"",
+            meeting_room_pwd:"",
+            sum_val:"1"
+      },
+      course_code:false,
+      start_time:false,
+      end_time:false,
+      course_code_error:"",
+      start_time_error:"",
+      end_time_error:""
     }
   },
   methods:{
     click_save(){
+      console.log(this.put_title)
       var that = this
-      console.log(this.create_values)
-      console.log(this.detail_time)
-      console.log($('#time').val())
       this.$axios.request({
-          url:"http://127.0.0.1:8000/api/course/",
+          url:this.com.course_url,
           method:"post",
-          data:this.create_values,
+          data:this.put_title,
           headers:{
             'Content-Type':'application/json',
           }
         }).then(function(date){
           // 请求发送成功
           console.log(date)
-          if (date.status == 201){
-            console.log("")
+          if (date.data.status == false){
+            console.log(date.data.error)
+            
+            for(var k in date.data.error){
+              console.log(k)
+              if( k == "course_code"){
+                console.log("执行")
+                that.course_code=true
+                that.course_code_error = date.data.error[k]
+              }
+              if( k == "start_time"){
+                console.log("执行")
+                that.start_time=true
+                that.start_time_error = date.data.error[k]
+              }
+              if( k == "end_time"){
+                console.log("执行")
+                that.end_time=true
+                that.end_time_error = date.data.error[k]
+              }
+            }
+            
+          }else{
             $("#my_modal").modal("show")
             that.$router.push({name:"Vlist"})
           }
@@ -119,18 +160,26 @@ export default {
           console.log("请求失败")
         })
     },
+    change_course_code(){
+      this.course_code=false
+      this.course_code_error=""
+    },
+    change_start_time(){
+      this.start_time=false
+      this.start_time_error=""
+    },
+    change_end_time(){
+      this.end_time=false
+      this.end_time_error=""
+    },
   },
   mounted(){
-    // this.test()
     var that = this
     this.status.create = true
     this.status.list = false
     this.status.client = false
-    // this.course_code = this.content_val.lenght()
-    console.log("这里11")
-    console.log(this.con )
     this.$axios.request({
-                url:"http://192.168.10.151:8000/api/course/",
+                url:this.com.course_url,
                 method:"GET",
                 headers:{
                   'Content-Type':'application/json',
@@ -138,15 +187,15 @@ export default {
               }).then(function(date){
                 // 请求发送成功
                 var len = date.data.length
-                console.log(date.data[len-1].course_code)
-                that.course_code = parseInt(date.data[len-1].course_code)+1
+                // console.log(date.data[len-1].course_code)
+                that.put_title.course_code = parseInt(date.data[len-1].course_code)+1
               }).catch(function(){
                 // 请求发送失败
                 console.log("请求失败")
               })
 
 
-    $("#datetimepicker1").datetimepicker({
+    $("#datetimepicker1,#datetimepicker2").datetimepicker({
         // format: "yyyy dd MM  - hh:ii",
         dateFormat: "yy-mm-dd",
         autoclose: true,
@@ -154,8 +203,8 @@ export default {
         pickerPosition: "bottom-left",
         language:'zh-CN'
     }).on("change",function(ev){
-        var startTime = $("#time").val();
-        that.time = startTime
+        that.put_title.start_time = $("#start_time").val();
+        that.put_title.end_time = $("#end_time").val();
     })
     
   },

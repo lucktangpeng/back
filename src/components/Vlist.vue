@@ -15,11 +15,14 @@
                               <th>#</th>
                               <th>课程id</th>
                               <th>课程名称</th>
-                              <th>课程时间</th>
+                              <th>开始时间</th>
+                              <th>结束时间</th>
                               <th>讲师</th>
                               <th>会议室号</th>
                               <th>会议室密码</th>
+                              <th>已报名人数</th>
                               <th>操作</th>
+                              
                             </tr>
                           </thead>
                           <tbody>
@@ -27,25 +30,29 @@
                               <th scope="row">{{item.id}}</th>
                               <td>{{item.course_code}}</td>
                               <td>{{item.course_name}}</td>
-                              <td>{{item.time + " " + item.small_time}}</td>
+                              <td>{{item.start_time}}</td>
+                              <td>{{item.end_time}}</td>
                               <td>{{item.lecturer}}</td>
                               <td>{{item.meeting_room}}</td>
                               <td>{{item.meeting_room_pwd}}</td>
+                              <td>{{item.sum_val}}</td>
                               <td>
                                 <button type="button" class="btn btn-success" @click="ele_alter(item.id)">修改</button>
+                                <button type="button" class="btn btn-info" @click="url_jump(item.course_name,item.start_time)">详细</button>
                                 <button type="button" class="btn btn-danger" @click="ele_remove(item.id)">删除</button>
                               </td>
                             </tr>
                            
                           </tbody>
                         </table>
-                         <button type="button" class="btn btn-info pull-right" @click="downloadExl(out_content)">数据导出</button>
+                         <!-- <button type="button" class="btn btn-info pull-right" @click="downloadExl(out_content)">数据导出</button> -->
                       </div>
                     </div>
                   </div>
                 </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
     name:"Vlist",
     data(){
@@ -57,14 +64,14 @@ export default {
       ele_remove(id){
         var that = this
         this.$axios.request({
-                url:"http://192.168.10.151:8000/api/course/"+id,
+                url:that.com.course_url+id,
                 method:"DELETE",
                 headers:{
                   'Content-Type':'application/json',
                 }
               }).then(function(date){
                 // 请求发送成功
-                console.log(date)
+                
                 if(date.status == 204){
                   that.$store.dispatch("content")
                   $("#my_modal").modal("show")
@@ -118,7 +125,6 @@ export default {
              }).reduce(function (prev, next) {
                  return prev.concat(next);
             });
-            console.log(sheetsData)
             var title = ['id',"课程代号","课程名称","日期","时间","讲师","会议室号","会议室密码"]
             for(var my_itme in [0,1,2,3,4,5,6,7]){
               sheetsData[my_itme].value = title[my_itme]
@@ -126,7 +132,6 @@ export default {
             
             
             sheetsData.forEach(function (item, index) {
-                //  console.log(item.position)
                  content[item.position] = { v: item.value };
              });
         //设置区域,比如表格从A1到D10,SheetNames:标题，
@@ -162,7 +167,11 @@ export default {
                 n = (n - m) / 26
              }
              return s
-         }     
+         },
+        url_jump(name,time,small_ti){
+          this.$router.push({name:"Vclient",params:{"course_name":name,"start_time":time}})
+        },     
+      
       },
 
     
@@ -174,16 +183,17 @@ export default {
       
     },
     computed:{
-      all_content(){
-        return this.$store.state.content_val
-      },
+      // all_content(){
+      //   return this.$store.state.content_val
+      // },
       out_content(){
         let b = JSON.parse(JSON.stringify(this.$store.state.content_val))
         return b
       },
-      status(){
-        return this.$store.state.title_status
-      }
-    }
+    },
+    computed:mapState({
+      all_content:"content_val",
+      status:"title_status"
+    })
 }
 </script>

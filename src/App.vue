@@ -8,6 +8,11 @@
 <script>
 // import "bootstrap/dist/css/bootstrap.min.css"
 import Vframe from "./components/Vframe.vue"
+import $ from "jquery"
+import{ 
+mapState,
+mapGetters,
+} from "vuex"
 export default {
   name: 'App',
   data(){

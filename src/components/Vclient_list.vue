@@ -4,8 +4,24 @@
                     <div class="card-close">
                       
                     </div>
-                    <div class="card-header d-flex align-items-center">
-                      <h3 class="h4">课程明细</h3>
+                    <div class="card-header d-flex align-items-center col-sm-12">
+                      <h3 class="h4">报名信息</h3>
+                      
+                            <div class="col-sm-3 offset-1" >
+                                <select class="form-control" v-model="select_id" id="select_cour" @change="course_change()">
+                                  <option value="0">选择查看课程</option>
+                                  <option  v-for="itme in content_val">{{itme.course_name}}</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 offset-1">
+                                <select class="form-control" v-model="time_id">
+                                  <option value="0">选择开始时间</option>
+                                  <option v-for="ti in course_time">{{ti.start_date}}</option>
+                                  
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-success" @click="seekhander()">搜索</button>
+                            <button type="button" class="btn btn-info offset-1" @click="click_all()">全部信息</button>
                     </div>
                     <div class="card-body">
                       <div class="table-responsive">
@@ -18,64 +34,43 @@
                               <th>培训人名称</th>
                               <th>手机号</th>
                               <th>区域</th>
-                              <th>操作</th>
+                              <!-- <th>操作</th> -->
                             </tr>
                           </thead>
                           <tbody>
-                            <tr v-for="item in all_content">
-                              <th scope="row">{{item.course}}</th>
+                            <tr v-for="item in local_content">
+                              <th scope="row">{{item.course_id}}</th>
                               <td>{{item.agent_id}}</td>
                               <td>{{item.company}}</td>
                               <td>{{item.phone}}</td>
                               <td>{{item.area}}</td>
-                              <!-- <td>{{item.lecturer}}</td> -->
-                              <td>
+                              <!-- <td>
                                 <button type="button" class="btn btn-success" @click="ele_alter(item.id)">修改</button>
                                 <button type="button" class="btn btn-danger" @click="ele_remove(item.id)">删除</button>
-                              </td>
+                              </td> -->
                             </tr>
                            
                           </tbody>
                         </table>
-                         <button type="button" class="btn btn-info pull-right" @click="downloadExl(out_content)">数据导出</button>
+                         <button type="button" class="btn btn-info pull-right" @click="downloadExl(change_save)">数据导出</button>
                       </div>
                     </div>
                   </div>
                 </div>
 </template>
 <script>
+import { mapState, mapGetters } from 'vuex';
 export default {
     name:"Vlist",
     data(){
         return{
-            
+            select_id:0,
+            test: this.id_in,
+            time_id:0,
+            local_content:""
         }
     },
     methods:{
-      // ele_remove(id){
-      //   var that = this
-      //   this.$axios.request({
-      //           url:"http://127.0.0.1:8000/api/record/",
-      //           method:"GET",
-      //           headers:{
-      //             'Content-Type':'application/json',
-      //           }
-      //         }).then(function(date){
-      //           // 请求发送成功
-      //           console.log(date)
-      //           if(date.status == 200){
-      //             // that.$store.dispatch("content")
-      //             // $("#my_modal").modal("show")
-      //           }
-      //         }).catch(function(){
-      //           // 请求发送失败
-      //           console.log("请求失败")
-      //         })
-      // },
-      // ele_alter(id){
-      //   this.$store.dispatch("alter_conent",id)
-      //   this.$router.push({name:'Valter',params:{index:id}})
-      // },
       onexport(){
         var wb = XLSX.utils.table_to_book(document.getElementById("out_table"));
         var wbout = XLSX.write(wb,{bookType:"xlsx",type:"binary"});
@@ -124,7 +119,6 @@ export default {
             
             
             sheetsData.forEach(function (item, index) {
-                //  console.log(item.position)
                  content[item.position] = { v: item.value };
              });
         //设置区域,比如表格从A1到D10,SheetNames:标题，
@@ -160,27 +154,117 @@ export default {
                 n = (n - m) / 26
              }
              return s
-         }     
+         },     
+      
+      seekhander(){
+        let seach = {}
+       
+        if(this.select_id && this.time_id !=0){       
+          seach["course_name"] = this.select_id
+          seach["start_time"] = this.time_id
+          // seach["time"] = times[0]
+          // seach["small_time"] = times[1]
+        }
+        if(this.select_id != 0){
+          seach["course_name"] = this.select_id
+       
+        }
+        var that = this
+        this.$axios.request({
+            url:this.com.many_about,
+            method:"POST",
+            data:seach,
+            headers:{
+              'Content-Type':'application/json',
+            }
+          }).then(function(date){
+            // 请求发送成功
+            that.local_content = date.data.data
+          }).catch(function(){
+            // 请求发送失败
+            console.log("请求失败")
+          })
       },
-
+      click_all(){
+        var that = this
+        this.select_id=0
+        this.time_id=0
+        this.$axios.request({
+            url:this.com.many_about,
+            method:"POST",
+            data:{},
+            headers:{
+              'Content-Type':'application/json',
+            }
+          }).then(function(date){
+            // 请求发送成功
+            that.local_content = date.data.data
+            that.local_content = date.data.data
+          }).catch(function(){
+            // 请求发送失败
+            
+            console.log("请求失败")
+          })
+      },
+      course_change(){
+        this.time_id = 0
+      },
+      
+      
+      
+      
+      
+      },
+     
+  
     
     mounted(){
       this.$store.dispatch("client_content")
-       this.status.create = false
+      this.status.create = false
       this.status.list = false
       this.status.client = true
-      
+      let seach = {}
+      let url_params = this.$route.params
+      if(url_params){
+        seach = url_params
+      }
+      var that = this
+      this.$axios.request({
+            url:this.com.many_about,
+            method:"POST",
+            data:seach,
+            headers:{
+              'Content-Type':'application/json',
+            }
+          }).then(function(date){
+            // 请求发送成功
+            that.local_content = date.data.data
+          }).catch(function(){
+            // 请求发送失败
+            console.log("请求失败")
+          })
     },
     computed:{
-      all_content(){
-        return this.$store.state.clientcontent
+      ...mapState({
+        all_content:"clientcontent",
+        status:"title_status",
+        content_val:"content_val"
+      }),
+      
+       course_time(){
+        var time_list = []
+        var test = JSON.parse(JSON.stringify(this.content_val))
+        for (var i=0;i<this.content_val.length;i++){
+          if(this.content_val[i].course_name == this.select_id){
+            time_list.push({
+              "start_date":this.content_val[i].start_time,
+            })
+          }
+        }
+        return time_list
       },
-      out_content(){
-        let b = JSON.parse(JSON.stringify(this.$store.state.clientcontent))
-        return b
-      },
-      status(){
-        return this.$store.state.title_status
+      change_save(){
+        return JSON.parse(JSON.stringify(this.local_content))
       }
     }
 }

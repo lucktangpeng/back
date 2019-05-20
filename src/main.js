@@ -6,8 +6,9 @@ import router from './router'
 import store from './store/store'
 import 'jquery'
 import axios from "axios"
+import goble from "./common/common"
 Vue.prototype.$axios = axios
-
+Vue.prototype.com = goble
 
 Vue.config.productionTip = false
 
